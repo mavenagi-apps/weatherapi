@@ -5,7 +5,7 @@ export default {
   async preInstall({ settings }) {
     // Validate the WeatherAPI key
     try {
-      const weatherClient = new weatherapi.Client({ apiKey: settings.apiKey });
+      const weatherClient = new weatherapi.Client({ apiKey: settings.token });
       await weatherClient.getCurrentWeather({ location: 'San Francisco' });
     } catch (error) {
       throw new Error('Invalid WeatherAPI key');
@@ -67,7 +67,7 @@ export default {
     actionId,
     payload,
   }) {
-    const weatherClient = new weatherapi.Client({ apiKey: settings.apiKey });
+    const weatherClient = new weatherapi.Client({ apiKey: settings.token });
     let response;
     let markdown = '';
 
@@ -77,7 +77,7 @@ export default {
       });
       markdown = `
         ## Current Weather for ${response.location.name}
-        - **Temperature:** ${response.current.temperature}°C
+        - **Temperature:** ${response.current.temperature}Â°C
         - **Condition:** ${response.current.condition.text}
         - **Humidity:** ${response.current.humidity}%
         - **Wind:** ${response.current.wind_kph} kph
@@ -91,8 +91,8 @@ export default {
       response.forecast.forecastday.forEach((day) => {
         markdown += `
           ### ${day.date}
-          - **Max Temperature:** ${day.day.maxtemp_c}°C
-          - **Min Temperature:** ${day.day.mintemp_c}°C
+          - **Max Temperature:** ${day.day.maxtemp_c}Â°C
+          - **Min Temperature:** ${day.day.mintemp_c}Â°C
           - **Condition:** ${day.day.condition.text}
         `;
       });

@@ -19,17 +19,17 @@ export default {
 
   async postInstall({ organizationId, agentId }) {
     const mavenAgi = new MavenAGIClient({
-      xOrganizationId: organizationId,
-      xAgentId: agentId,
+      organizationId: organizationId,
+      agentId: agentId,
     });
 
     // Create an action for getting current weather
-    await mavenAgi.actions.createOrUpdateAction({
-      entityId: { referenceId: 'get_current_weather' },
+    await mavenAgi.actions.createOrUpdate({
+      actionId: { referenceId: 'get_current_weather' },
       name: 'Get Current Weather',
       description: 'Fetch the current weather for a given location',
       userInteractionRequired: false,
-      requiredUserContextFieldNames: new Set(),
+      preconditions: { requiredUserContextFieldNames: new Set() },
       userFormParameters: [
         {
           id: 'location',
@@ -41,13 +41,13 @@ export default {
     });
 
     // Create an action for getting weather forecast
-    await mavenAgi.actions.createOrUpdateAction({
-      entityId: { referenceId: 'get_weather_forecast' },
+    await mavenAgi.actions.createOrUpdate({
+      actionId: { referenceId: 'get_weather_forecast' },
       name: 'Get Weather Forecast',
       description:
         'Fetch the weather forecast for a given location for the next 7 days',
       userInteractionRequired: false,
-      requiredUserContextFieldNames: new Set(),
+      preconditions: { requiredUserContextFieldNames: new Set() },
       userFormParameters: [
         {
           id: 'location',

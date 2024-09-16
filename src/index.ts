@@ -29,7 +29,6 @@ export default {
       name: 'Get Current Weather',
       description: 'Fetch the current weather for a given location',
       userInteractionRequired: false,
-      preconditions: { requiredUserContextFieldNames: new Set() },
       userFormParameters: [
         {
           id: 'location',
@@ -47,7 +46,6 @@ export default {
       description:
         'Fetch the weather forecast for a given location for the next 7 days',
       userInteractionRequired: false,
-      preconditions: { requiredUserContextFieldNames: new Set() },
       userFormParameters: [
         {
           id: 'location',

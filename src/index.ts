@@ -58,6 +58,7 @@ export default {
   },
 
   async executeAction({ actionId, parameters }) {
+    console.log('action request for ' + actionId);
     if (actionId === 'get_current_weather') {
       const data = await makeWeatherRequest(parameters.location);
       return JSON.stringify(data);

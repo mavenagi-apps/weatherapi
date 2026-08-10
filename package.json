@@ -1,19 +1,30 @@
 {
-  "dependencies": {
-    "mavenagi": "1.0.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "next": "14.2.35",
-    "@vercel/functions": "1.4.0"
-  },
+  "name": "@mavenagi/weatherapi",
+  "version": "0.0.1",
+  "private": true,
   "scripts": {
-    "build": "next build"
+    "build": "next build",
+    "typecheck": "tsc --noEmit",
+    "test": "pnpm test:unit && pnpm test:e2e",
+    "test:unit": "vitest run",
+    "test:e2e": "vitest run --config vitest.config.e2e.ts",
+    "test:e2e:record": "NOCK_RECORD=true vitest run --config vitest.config.e2e.ts",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@vercel/functions": "1.4.0",
+    "mavenagi": "1.0.0",
+    "next": "14.2.35",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "typescript": "5.5.3",
     "@types/node": "20.14.11",
     "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0"
+    "@types/react-dom": "18.3.0",
+    "nock": "14.0.5",
+    "typescript": "5.5.3",
+    "vitest": "4.1.9"
   },
-  "packageManager": "npm@10.0.0"
+  "packageManager": "pnpm@11.5.0+sha512.dbfcc4f81cf48597afd4bc391ffdf12c11f1a9fb83a395bfa6b0a2d9cc2fd8ffebafdb1ccbd529632153f793904c2615b7f09fe1a345473fd1c35845172a8eb1"
 }

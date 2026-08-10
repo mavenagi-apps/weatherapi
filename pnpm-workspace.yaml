@@ -1,0 +1,38 @@
+# pnpm settings for this app.
+#
+# NOTE: as of pnpm 11, .npmrc is reserved for registry/auth configuration only —
+# all pnpm-specific settings must live here. See https://pnpm.io/settings
+
+# Supply chain security — delay installing newly published versions.
+# 20160 minutes = 14 days. pnpm refuses to resolve any package version published
+# less than 14 days ago, including transitive dependencies. This closes the short
+# attack window used in supply chain attacks (e.g. Shai-Hulud), where malicious
+# versions are published and typically yanked within hours.
+minimumReleaseAge: 20160
+
+# Packages exempt from the age gate above.
+#
+# Internal first-party packages are trusted at every published version, so they
+# are not delayed — this app should be able to adopt an SDK release immediately.
+#
+# IMPORTANT: third-party exceptions must ALWAYS use exact version pins
+# (e.g. `ws@8.20.1`) with a comment justifying the exception. Never add a bare
+# package name for a third-party dependency — that bypasses the protection for
+# all of its future versions, including a compromised one.
+minimumReleaseAgeExclude:
+  - "@mavenagi/*" # internal packages must not be delayed after publish
+  - mavenagi # unscoped internal SDK — same rationale as @mavenagi/*
+
+# Dependencies allowed to run install scripts (postinstall/install/preinstall).
+#
+# pnpm 11 defaults `strictDepBuilds` to true, so `pnpm install` fails if a
+# dependency wants to run a build script that is not listed here. sharp is
+# build-only tooling this app does not use, so it is denied rather than allowed.
+#
+# When adding a dependency that genuinely requires a native build step, add it
+# here with `true` and a note explaining why.
+allowBuilds:
+  sharp: false # image optimization is unused by this app
+
+# CI runs `pnpm dedupe --check`, so this must stay set for behaviour to match.
+dedupePeerDependents: true

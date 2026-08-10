@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Maven AGI generated routes
+/src/app/mavenagi-cgi
+
+# Next.js
+/.next/
+next-env.d.ts
+*.tsbuildinfo
+
+# Local env files
+.env*.local
+
+# Vercel
+.vercel
+
+# macOS
+.DS_Store

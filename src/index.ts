@@ -1,21 +1,37 @@
-import { MavenAGIClient, MavenAGI } from 'mavenagi';
+import { MavenAGIClient } from 'mavenagi';
 
-const makeWeatherRequest = async (location: string) => {
-  const response = await fetch(
-    `https://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_API_KEY}&q=${location}&aqi=yes`
-  );
-  return await response.json();
-};
+const weatherRequest = async (
+  endpoint: string,
+  params: Record<string, string>
+) => {
+  // URLSearchParams encodes every value, so an LLM-supplied location like "New York" or
+  // "London&days=1" can't corrupt the query string or inject extra parameters.
+  const query = new URLSearchParams({
+    key: process.env.WEATHER_API_KEY ?? '',
+    aqi: 'yes',
+    ...params,
+  });
 
-const makeWeatherForecastRequest = async (location: string) => {
   const response = await fetch(
-    `https://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&q=${location}&days=7&aqi=yes`
+    `https://api.weatherapi.com/v1/${endpoint}?${query}`
   );
-  return await response.json();
+  // Never return the error body — the agent would relay it as if it were weather data.
+  if (!response.ok) {
+    return 'Unable to retrieve weather data. Please try again later.';
+  }
+
+  return JSON.stringify(await response.json());
 };
 
 export default {
-  async preInstall() {},
+  async preInstall() {
+    if (!process.env.WEATHER_API_KEY) {
+      throw new Error(
+        'WEATHER_API_KEY is not configured. Get a key at ' +
+          'https://www.weatherapi.com/my/ and set it before installing this app.'
+      );
+    }
+  },
 
   async postInstall({ organizationId, agentId }) {
     const mavenAgi = new MavenAGIClient({
@@ -58,15 +74,17 @@ export default {
   },
 
   async executeAction({ actionId, parameters }) {
-    console.log('action request for ' + actionId);
     if (actionId === 'get_current_weather') {
-      const data = await makeWeatherRequest(parameters.location);
-      return JSON.stringify(data);
-    } else if (actionId === 'get_weather_forecast') {
-      const data = await makeWeatherForecastRequest(parameters.location);
-      return JSON.stringify(data);
-    } else {
-      return 'Unknown action';
+      return await weatherRequest('current.json', { q: parameters.location });
     }
+
+    if (actionId === 'get_weather_forecast') {
+      return await weatherRequest('forecast.json', {
+        q: parameters.location,
+        days: '7',
+      });
+    }
+
+    return 'Unknown action';
   },
 };

@@ -1,0 +1,6 @@
+minimumReleaseAgeExclude:
+  - mavenagi@1.2.66 # first-party SDK; drops the vulnerable qs dependency
+
+# vitest resolves vite 8.1.5, which has advisories fixed in 8.1.6.
+overrides:
+  "vite@>=8.0.0 <8.1.6": 8.1.6

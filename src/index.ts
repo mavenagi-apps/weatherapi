@@ -23,6 +23,15 @@ const weatherRequest = async (
   return JSON.stringify(await response.json());
 };
 
+// WeatherAPI fails to look up many place names written in non-Latin scripts, so ask for English.
+const LOCATION_PARAMETER = {
+  id: 'location',
+  label: 'Location',
+  description:
+    'The city to get the weather for, written in English with its country, for example "Seoul, South Korea". Translate the name to English even when the user writes in another language.',
+  required: true,
+};
+
 export default {
   async preInstall() {
     if (!process.env.WEATHER_API_KEY) {
@@ -45,14 +54,7 @@ export default {
       name: 'Get Current Weather',
       description: 'Fetch the current weather for a given location',
       userInteractionRequired: false,
-      userFormParameters: [
-        {
-          id: 'location',
-          label: 'Location',
-          description: 'The location to get the weather for',
-          required: true,
-        },
-      ],
+      userFormParameters: [LOCATION_PARAMETER],
     });
 
     // Create an action for getting weather forecast
@@ -62,14 +64,7 @@ export default {
       description:
         'Fetch the weather forecast for a given location for the next 7 days',
       userInteractionRequired: false,
-      userFormParameters: [
-        {
-          id: 'location',
-          label: 'Location',
-          description: 'The location to get the weather for',
-          required: true,
-        },
-      ],
+      userFormParameters: [LOCATION_PARAMETER],
     });
   },
 

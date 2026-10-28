@@ -70,7 +70,8 @@ describe('postInstall', () => {
   const LOCATION_PARAMETER = {
     id: 'location',
     label: 'Location',
-    description: 'The location to get the weather for',
+    description:
+      'The city to get the weather for, written in English with its country, for example "Seoul, South Korea". Translate the name to English even when the user writes in another language.',
     required: true,
   };
 
